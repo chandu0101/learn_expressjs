@@ -14,7 +14,24 @@ app.get("/", (req, res) => {
 });
 
 app.get('/api/users', (req, resp) => {
-    resp.send(mockedUsers)
+    const { query } = req;
+    const filter = query["filter"];
+    const value = query["value"];
+    console.log(`Filter ${filter} Value ${value}`);
+
+    if (filter && value && (filter === "userName" || filter === "displayName")) {
+        if (filter === "userName") {
+            console.log("userName");
+            resp.send(mockedUsers.filter((user) => user.userName.includes(value as string)))
+        } else {
+            resp.send(mockedUsers.filter((user) => { user.displayName.includes(value as string) }))
+        }
+
+    } else {
+        resp.send(mockedUsers)
+    }
+
+
 })
 
 app.get("/api/users/:id", (req, resp) => {
